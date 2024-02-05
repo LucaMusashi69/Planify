@@ -1,0 +1,31 @@
+actor SucursalCrud {
+    type SucursalId = Nat32;
+    type Sucursal = {
+        calle: Text;
+        colonia: Text;
+        codigoPostal: Text;
+        numero: Text;
+        estado: Text;
+        municipio: Text;
+        pais: Text;
+    };
+
+    stable var sucursalId: SucursalId = 0;
+    let sucursalList = HashMap.HashMap<Text, Sucursal>(0, Text.equal, Text.hash);
+
+    private func generateSucursalId() : SucursalId {
+        sucursalId += 1;
+        return sucursalId;
+    };
+
+    public shared (msg) func registrarSucursal(calle: Text, colonia: Text, codigoPostal: Text, numero: Text, estado: Text, municipio: Text, pais: Text) : async () {
+        let sucursalKey = calle # ", " # colonia # ", " # codigoPostal;
+        let sucursal = {calle = calle; colonia = colonia; codigoPostal = codigoPostal; numero = numero; estado = estado; municipio = municipio; pais = pais};
+
+        sucursalList.put(sucursalKey, sucursal);
+        Debug.print("Nueva sucursal registrada en: " # sucursalKey);
+        return ();
+    };
+
+    // Otras funciones para consultar, actualizar y eliminar sucursales si es necesario.
+}
