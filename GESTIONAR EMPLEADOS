@@ -1,0 +1,29 @@
+actor EmpleadoCrud {
+    type EmpleadoId = Nat32;
+    type Empleado = {
+        nombre: Text;
+        apellido: Text;
+        edad: Nat;
+        cargo: Text;
+        salario: Nat;
+    };
+
+    stable var empleadoId: EmpleadoId = 0;
+    let empleadoList = HashMap.HashMap<Text, Empleado>(0, Text.equal, Text.hash);
+
+    private func generateEmpleadoId() : EmpleadoId {
+        empleadoId += 1;
+        return empleadoId;
+    };
+
+    public shared (msg) func contratarEmpleado(nombre: Text, apellido: Text, edad: Nat, cargo: Text, salario: Nat) : async () {
+        let empleadoKey = Text.fromInt(generateEmpleadoId());
+        let empleado = {nombre = nombre; apellido = apellido; edad = edad; cargo = cargo; salario = salario};
+
+        empleadoList.put(empleadoKey, empleado);
+        Debug.print("Nuevo empleado contratado: " # empleadoKey);
+        return ();
+    };
+
+    // Otras funciones para consultar, actualizar y eliminar empleados si es necesario.
+}
