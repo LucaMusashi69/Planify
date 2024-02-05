@@ -1,0 +1,27 @@
+actor GananciasCrud {
+    type GananciaId = Nat32;
+    type Ganancia = {
+        descripcion: Text;
+        monto: Nat;
+        fecha: Time;
+    };
+
+    stable var gananciaId: GananciaId = 0;
+    let gananciaList = HashMap.HashMap<Text, Ganancia>(0, Text.equal, Text.hash);
+
+    private func generateGananciaId() : GananciaId {
+        gananciaId += 1;
+        return gananciaId;
+    };
+
+    public shared (msg) func registrarGanancia(descripcion: Text, monto: Nat, fecha: Time) : async () {
+        let gananciaKey = Text.fromInt(generateGananciaId());
+        let ganancia = {descripcion = descripcion; monto = monto; fecha = fecha};
+
+        gananciaList.put(gananciaKey, ganancia);
+        Debug.print("Nueva ganancia registrada: " # gananciaKey);
+        return ();
+    };
+
+    // Otras funciones para consultar, actualizar y eliminar ganancias si es necesario.
+}
