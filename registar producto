@@ -1,0 +1,29 @@
+actor ProductoCrud {
+    type ProductoId = Nat32;
+    type Producto = {
+        nombre: Text;
+        descripcion: Text;
+        precio: Nat;
+        stock: Nat;
+        categoria: Text;
+    };
+
+    stable var productoId: ProductoId = 0;
+    let productoList = HashMap.HashMap<Text, Producto>(0, Text.equal, Text.hash);
+
+    private func generateProductId() : ProductoId {
+        productoId += 1;
+        return productoId;
+    };
+
+    public shared (msg) func registrarProducto(nombre: Text, descripcion: Text, precio: Nat, stock: Nat, categoria: Text) : async () {
+        let productoKey = nombre # "_" # Text.fromInt(generateProductId());
+        let producto = {nombre = nombre; descripcion = descripcion; precio = precio; stock = stock; categoria = categoria};
+
+        productoList.put(productoKey, producto);
+        Debug.print("Nuevo producto registrado: " # productoKey);
+        return ();
+    };
+
+    // Otras funciones para consultar, actualizar y eliminar productos si es necesario.
+}
